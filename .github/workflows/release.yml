@@ -19,11 +19,9 @@ jobs:
         run: deno task compile
       - name: Test run
         run: ./deepl --help
-      - name: Compress
-        run: tar czvf deepl.tar.gz ./deepl
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
-          name: deepl-cli
-          path: /home/runner/work/deepl-cli/deepl-cli
+          name: deepl-linux
+          path: ./deepl
           compression-level: 0
