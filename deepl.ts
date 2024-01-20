@@ -49,6 +49,22 @@ const showHelp = () => {
   Deno.exit(0);
 };
 
+const showUsage = async () => {
+  try {
+    const result = await client.usage();
+    console.log(`character_count: ${result.character_count}`);
+    console.log(`character_limit: ${result.character_limit}`);
+    Deno.exit(0);
+  } catch (e) {
+    console.error("Failed to translate");
+    console.error("");
+    console.error("message:");
+    console.error(`  ${e.message}`);
+    console.error("  You should check your API key (DEEPL_API_KEY)");
+    Deno.exit(1);
+  }
+};
+
 const run = async (word: string, from: Language, to: Language) => {
   try {
     const result = await client.translateText(word, from, to);
@@ -64,14 +80,18 @@ const run = async (word: string, from: Language, to: Language) => {
 };
 
 const args = parseArgs(Deno.args, {
-  boolean: ["help"],
+  boolean: ["help", "usage"],
   string: ["word", "from", "to"],
   default: { from: "EN", to: "JA" },
-  alias: { help: "h", from: "f", to: "t", word: "w" },
+  alias: { help: "h", usage: "u", from: "f", to: "t", word: "w" },
 });
 
 if (args.help) {
   showHelp();
+}
+
+if (args.usage) {
+  await showUsage();
 }
 
 try {
@@ -81,7 +101,7 @@ try {
     word: z.string().min(1),
   });
   const { word, from, to } = schema.parse(args);
-  run(word, from, to);
+  await run(word, from, to);
 } catch (e) {
   console.error("Failed to parse arguments");
   if (e instanceof z.ZodError) {
