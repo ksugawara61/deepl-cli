@@ -2,9 +2,13 @@ name: Release
 on:
   release:
     types: [created]
+  workflow_dispatch:
 jobs:
-  manual_process:
+  ci:
+    uses: ./.github/workflows/ci.yml
+  compile:
     runs-on: ubuntu-20.04
+    needs: [ci]
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
