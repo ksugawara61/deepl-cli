@@ -42,5 +42,5 @@ $ deno fmt
 - compile
 
 ```
-$ deno task build
+$ deno task compile
 ```
