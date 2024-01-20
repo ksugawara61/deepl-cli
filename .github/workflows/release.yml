@@ -21,4 +21,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: deepl
-          path: deepl
+          path: /home/runner/work/deepl-cli/deepl-cli/deepl
