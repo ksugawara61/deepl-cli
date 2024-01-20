@@ -1,8 +1,6 @@
 import { parseArgs } from "https://deno.land/std@0.207.0/cli/parse_args.ts";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
-import { DeepLClient } from "npm:deepl-lightweight-client@0.0.7";
-
-const client = new DeepLClient(Deno.env.get("DEEPL_API_KEY") ?? "");
+import { showHelp, showUsage, translateText } from "./utils.ts";
 
 const languages = [
   "BG",
@@ -30,55 +28,6 @@ const languages = [
   "SV",
   "ZH",
 ] as const;
-type Language = typeof languages[number];
-
-const showHelp = () => {
-  console.log("deepl - translate words");
-  console.log("");
-  console.log("USAGE: deepl --word <word> --from <from> --to <to>");
-  console.log("");
-  console.log("OPTIONS:");
-  console.log("  -h, --help         Show this help message and exit.");
-  console.log("  -u, --usage        Show usage and exit.");
-  console.log("  --word, -w <word>  Word to translate.");
-  console.log("  --from, -f <from>  Language to translate from.");
-  console.log("  --to, -t <to>      Language to translate to.");
-  console.log("");
-  console.log("EXAMPLE:");
-  console.log("  deepl --word hello --from EN --to JA");
-  console.log("");
-  Deno.exit(0);
-};
-
-const showUsage = async () => {
-  try {
-    const result = await client.usage();
-    console.log(`character_count: ${result.character_count}`);
-    console.log(`character_limit: ${result.character_limit}`);
-    Deno.exit(0);
-  } catch (e) {
-    console.error("Failed to translate");
-    console.error("");
-    console.error("message:");
-    console.error(`  ${e.message}`);
-    console.error("  You should check your API key (DEEPL_API_KEY)");
-    Deno.exit(1);
-  }
-};
-
-const run = async (word: string, from: Language, to: Language) => {
-  try {
-    const result = await client.translateText(word, from, to);
-    console.log(result.text);
-  } catch (e) {
-    console.error("Failed to translate");
-    console.error("");
-    console.error("message:");
-    console.error(`  ${e.message}`);
-    console.error("  You should check your API key (DEEPL_API_KEY)");
-    Deno.exit(1);
-  }
-};
 
 const args = parseArgs(Deno.args, {
   boolean: ["help", "usage"],
@@ -89,10 +38,19 @@ const args = parseArgs(Deno.args, {
 
 if (args.help) {
   showHelp();
+  Deno.exit(0);
 }
 
 if (args.usage) {
-  await showUsage();
+  try {
+    await showUsage();
+    Deno.exit(0);
+  } catch (e) {
+    console.error("Failed to get usage");
+    console.error(e.message);
+    console.error("You should check your API key (DEEPL_API_KEY)");
+    Deno.exit(1);
+  }
 }
 
 try {
@@ -102,11 +60,16 @@ try {
     word: z.string().min(1),
   });
   const { word, from, to } = schema.parse(args);
-  await run(word, from, to);
+  await translateText(word, from, to);
+  Deno.exit(0);
 } catch (e) {
-  console.error("Failed to parse arguments");
   if (e instanceof z.ZodError) {
+    console.error("Failed to parse arguments");
     console.error(e.errors.map((e) => `${e.path}: ${e.message}`).join("\n"));
+  } else {
+    console.error("Failed to translate");
+    console.error(e.message);
+    console.error("You should check your API key (DEEPL_API_KEY)");
   }
   Deno.exit(1);
 }
