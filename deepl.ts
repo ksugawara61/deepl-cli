@@ -39,6 +39,7 @@ const showHelp = () => {
   console.log("");
   console.log("OPTIONS:");
   console.log("  -h, --help         Show this help message and exit.");
+  console.log("  -u, --usage        Show usage and exit.");
   console.log("  --word, -w <word>  Word to translate.");
   console.log("  --from, -f <from>  Language to translate from.");
   console.log("  --to, -t <to>      Language to translate to.");
