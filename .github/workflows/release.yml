@@ -24,3 +24,4 @@ jobs:
         with:
           name: deepl
           path: ./deepl.tar.gz
+          compression-level: 0
