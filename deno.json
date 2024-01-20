@@ -1,0 +1,6 @@
+{
+  "tasks": {
+    "compile": "deno compile --allow-read --allow-env --allow-net deepl.ts"
+  },
+  "lock": true
+}

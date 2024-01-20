@@ -1,8 +1,6 @@
 import { parseArgs } from "https://deno.land/std@0.207.0/cli/parse_args.ts";
-import { z } from "https://deno.land/x/zod@v3.16.1/mod.ts";
+import { z } from "https://deno.land/x/zod/mod.ts";
 import { DeepLClient } from "npm:deepl-lightweight-client@0.0.7";
-
-// deno compile --allow-read --allow-env --allow-net deepl.ts
 
 const client = new DeepLClient(Deno.env.get("DEEPL_API_KEY") ?? "");
 
