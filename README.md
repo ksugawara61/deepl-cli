@@ -22,7 +22,6 @@ OPTIONS:
 
 EXAMPLE:
   deepl --word hello --from EN --to JA
-
 ```
 
 - example
