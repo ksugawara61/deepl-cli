@@ -1,4 +1,5 @@
 import { parseArgs } from "https://deno.land/std@0.207.0/cli/parse_args.ts";
+import { z } from "https://deno.land/x/zod@v3.16.1/mod.ts";
 import { DeepLClient } from "npm:deepl-lightweight-client@0.0.7";
 
 // deno compile --allow-read --allow-env --allow-net deepl.ts
@@ -32,8 +33,22 @@ const languages = [
   "ZH",
 ] as const;
 type Language = typeof languages[number];
-const isLanguage = (lang: string): lang is Language => {
-  return languages.includes(lang as Language);
+
+const showHelp = () => {
+  console.log("deepl - translate words");
+  console.log("");
+  console.log("USAGE: deepl --word <word> --from <from> --to <to>");
+  console.log("");
+  console.log("OPTIONS:");
+  console.log("  -h, --help         Show this help message and exit.");
+  console.log("  --word, -w <word>  Word to translate.");
+  console.log("  --from, -f <from>  Language to translate from.");
+  console.log("  --to, -t <to>      Language to translate to.");
+  console.log("");
+  console.log("EXAMPLE:");
+  console.log("  deepl --word hello --from EN --to JA");
+  console.log("");
+  Deno.exit(0);
 };
 
 const run = async (word: string, from: Language, to: Language) => {
@@ -42,38 +57,37 @@ const run = async (word: string, from: Language, to: Language) => {
     console.log(result.text);
   } catch (e) {
     console.error("Failed to translate");
-    console.error("message:", e.message);
+    console.error("");
+    console.error("message:");
+    console.error(`  ${e.message}`);
+    console.error("  You should check your API key (DEEPL_API_KEY)");
     Deno.exit(1);
   }
 };
 
-const { help, word, from, to } = parseArgs(Deno.args, {
+const args = parseArgs(Deno.args, {
   boolean: ["help"],
   string: ["word", "from", "to"],
-  default: { from: "en", to: "ja" },
+  default: { from: "EN", to: "JA" },
   alias: { help: "h", from: "f", to: "t", word: "w" },
 });
 
-if (help) {
-  console.log("TODO: show help");
-  Deno.exit(0);
+if (args.help) {
+  showHelp();
 }
 
-if (!word) {
-  console.error("word is required");
+try {
+  const schema = z.object({
+    from: z.enum(languages),
+    to: z.enum(languages),
+    word: z.string().min(1),
+  });
+  const { word, from, to } = schema.parse(args);
+  run(word, from, to);
+} catch (e) {
+  console.error("Failed to parse arguments");
+  if (e instanceof z.ZodError) {
+    console.error(e.errors.map((e) => `${e.path}: ${e.message}`).join("\n"));
+  }
   Deno.exit(1);
 }
-
-const upperFrom = from.toUpperCase();
-if (!isLanguage(upperFrom)) {
-  console.error("from is invalid language");
-  Deno.exit(1);
-}
-
-const upperTo = to.toUpperCase();
-if (!isLanguage(upperTo)) {
-  console.error("to is invalid language");
-  Deno.exit(1);
-}
-
-run(word, upperFrom, upperTo);
