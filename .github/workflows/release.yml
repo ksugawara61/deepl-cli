@@ -17,11 +17,13 @@ jobs:
           deno-version: "1.39.4"
       - name: Compile
         run: deno task compile
+      - name: Test run
+        run: ./deepl --help
       - name: Compress
         run: tar czvf deepl.tar.gz ./deepl
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
           name: deepl
-          path: ./deepl.tar.gz
+          path: ../
           compression-level: 0
