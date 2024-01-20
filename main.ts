@@ -1,6 +1,6 @@
 import { parseArgs } from "https://deno.land/std@0.207.0/cli/parse_args.ts";
 import { z } from "https://deno.land/x/zod@v3.22.4/mod.ts";
-import { showHelp, showUsage, translateText } from "./utils.ts";
+import { showHelp, showUsage, translateText } from "./libs/deepl.ts";
 
 const languages = [
   "BG",
