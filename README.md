@@ -1,15 +1,12 @@
 # DeepL CLI
 
+deepl-cli is unofficial DeepL CLI. It is useful for translating Language easily.
+
 ## Installation
 
-```
-$ git clone git@github.com:ksugawara61/deepl-cli.git
-$ deno task compile
-```
+Executable binaries are available at [releases](https://github.com/ksugawara61/deepl-cli/releases).
 
 ## Usage
-
-- help
 
 ```
 $ deepl --help
@@ -28,28 +25,25 @@ EXAMPLE:
   deepl --word hello --from EN --to JA
 ```
 
-- example
+## Description
 
-```
+Example 1:
+
+```bash
 $ DEEPL_API_KEY=your-api-key deepl --word hello --from EN --to JA
+こんにちわ
 ```
 
-## Command
+Example 2:
 
-- run
-
-```
-$ deno task run --word hello
-```
-
-- format
-
-```
-$ deno fmt
+```bash
+$ DEEPL_API_KEY=your-api-key deepl --usage
+character_count: 667 / 500000
 ```
 
-- compile
+## Build
 
-```
-$ deno task compile
+```bash
+$ git clone git@github.com:ksugawara61/deepl-cli.git
+$ deno task compile --target aarch64-apple-darwin # or your target OS architecture
 ```
