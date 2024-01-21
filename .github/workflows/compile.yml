@@ -1,0 +1,39 @@
+name: Compile
+on:
+  release:
+    types: [created]
+  workflow_dispatch:
+    inputs:
+      version:
+        type: string
+        description: Version to release (e.g. 1.0.0)
+        required: true
+
+env:
+  TZ: "Asia/Tokyo"
+
+jobs:
+  compile:
+    runs-on: ubuntu-20.04
+    timeout-minutes: 10
+    env:
+      RELEASE_VERSION: ${{ github.event.release.tag_name || github.event.inputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v1
+        with:
+          deno-version: "1.39.4"
+      - name: Validate Release Version
+        run: |
+          if [[ ! ${{ env.RELEASE_VERSION }} =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Invalid version format. (e.g. 1.0.0)"
+            exit 1
+          fi
+      - name: Compile
+        run: deno task compile
+      - name: Compress
+        run: tar -czf deepl-aarch64-apple-darwin.tar.gz deepl
+      - name: Upload to Release
+        run: gh release upload v${{ env.RELEASE_VERSION }} deepl-aarch64-apple-darwin.tar.gz
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
