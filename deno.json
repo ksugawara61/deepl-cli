@@ -1,7 +1,7 @@
 {
   "tasks": {
     "run": "deno run --allow-read --allow-env --allow-net main.ts",
-    "compile": "deno compile --output deepl --allow-read --allow-env --allow-net main.ts --lite",
+    "compile": "deno compile --output deepl --target aarch64-apple-darwin --allow-read --allow-env --allow-net main.ts --lite",
     "test": "deno test --allow-read --allow-env --allow-net"
   },
   "lock": true

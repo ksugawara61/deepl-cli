@@ -41,7 +41,7 @@ jobs:
         with:
           version: ${{ env.RELEASE_VERSION }}
       - name: Compile
-        run: deno task compile --target ${{ matrix.arch }}
+        run: deno compile --output deepl --target ${{ matrix.arch }} aarch64-apple-darwin --allow-read --allow-env --allow-net main.ts --lite
       - name: Compress
         run: tar -czf deepl-${{ matrix.arch }}.tar.gz deepl
       - name: Upload to Release

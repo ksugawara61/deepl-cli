@@ -45,5 +45,5 @@ character_count: 667 / 500000
 
 ```bash
 $ git clone git@github.com:ksugawara61/deepl-cli.git
-$ deno task compile --target aarch64-apple-darwin # or your target OS architecture
+$ deno task compile
 ```
