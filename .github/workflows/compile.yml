@@ -29,12 +29,9 @@ jobs:
       - uses: denoland/setup-deno@v1
         with:
           deno-version: "1.39.4"
-      - name: Validate Release Version
-        run: |
-          if [[ ! ${{ env.RELEASE_VERSION }} =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-            echo "Invalid version format. (e.g. 1.0.0)"
-            exit 1
-          fi
+      - uses: ./.github/actions/validate_version
+        with:
+          version: ${{ env.RELEASE_VERSION }}
       - name: Compile
         run: deno task compile
       - name: Compress

@@ -17,12 +17,9 @@ jobs:
       RELEASE_VERSION: ${{ github.event.inputs.version }}
       if: github.ref_name == 'main'
     steps:
-      - name: Validate Release Version
-        run: |
-          if [[ ! ${{ github.event.inputs.version }} =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-            echo "Invalid version format. (e.g. 1.0.0)"
-            exit 1
-          fi
+      - uses: ./.github/actions/validate_version
+        with:
+          version: ${{ env.RELEASE_VERSION }}
 
   ci:
     needs: [validate]
@@ -39,13 +36,9 @@ jobs:
       contents: write
     if: github.ref_name == 'main'
     steps:
-      - uses: actions/checkout@v4
-      - name: Validate Release Version
-        run: |
-          if [[ ! ${{ env.RELEASE_VERSION }} =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-            echo "Invalid version format. (e.g. 1.0.0)"
-            exit 1
-          fi
+      - uses: ./.github/actions/validate_version
+        with:
+          version: ${{ env.RELEASE_VERSION }}
       - name: Setup Release Tag Name
         run: echo "RELEASE_TAG=v$RELEASE_VERSION" >> $GITHUB_ENV
       - name: Create Release Note
