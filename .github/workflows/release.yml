@@ -50,5 +50,7 @@ jobs:
     needs: [release]
     if: github.ref_name == 'main'
     uses: ./.github/workflows/compile.yml
+    permissions:
+      contents: write
     with:
       version: ${{ github.event.inputs.version }}
