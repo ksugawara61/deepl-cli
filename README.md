@@ -4,7 +4,8 @@ deepl-cli is unofficial DeepL CLI. It is useful for translating Language easily.
 
 ## Installation
 
-Executable binaries are available at [releases](https://github.com/ksugawara61/deepl-cli/releases).
+Executable binaries are available at
+[releases](https://github.com/ksugawara61/deepl-cli/releases).
 
 ## Usage
 
