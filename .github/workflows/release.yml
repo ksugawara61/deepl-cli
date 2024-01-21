@@ -17,6 +17,7 @@ jobs:
       RELEASE_VERSION: ${{ github.event.inputs.version }}
       if: github.ref_name == 'main'
     steps:
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/validate_version
         with:
           version: ${{ env.RELEASE_VERSION }}
@@ -36,6 +37,7 @@ jobs:
       contents: write
     if: github.ref_name == 'main'
     steps:
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/validate_version
         with:
           version: ${{ env.RELEASE_VERSION }}
