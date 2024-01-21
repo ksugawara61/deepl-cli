@@ -18,6 +18,8 @@ jobs:
     timeout-minutes: 10
     env:
       RELEASE_VERSION: ${{ github.event.release.tag_name || github.event.inputs.version }}
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - uses: denoland/setup-deno@v1
