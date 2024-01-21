@@ -35,6 +35,8 @@ jobs:
     needs: [ci]
     env:
       RELEASE_VERSION: ${{ github.event.inputs.version }}
+    permissions:
+      contents: write
     if: github.ref_name == 'main'
     steps:
       - uses: actions/checkout@v4
