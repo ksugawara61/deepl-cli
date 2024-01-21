@@ -24,6 +24,14 @@ jobs:
       RELEASE_VERSION: ${{ github.event.inputs.version }}
     permissions:
       contents: write
+    strategy:
+      matrix:
+        arch:
+          [
+            "x86_64-unknown-linux-gnu",
+            "x86_64-apple-darwin",
+            "aarch64-apple-darwin",
+          ]
     steps:
       - uses: actions/checkout@v4
       - uses: denoland/setup-deno@v1
@@ -33,10 +41,10 @@ jobs:
         with:
           version: ${{ env.RELEASE_VERSION }}
       - name: Compile
-        run: deno task compile
+        run: deno task compile --target ${{ matrix.arch }}
       - name: Compress
-        run: tar -czf deepl-aarch64-apple-darwin.tar.gz deepl
+        run: tar -czf deepl-${{ matrix.arch }}.tar.gz deepl
       - name: Upload to Release
-        run: gh release upload v${{ env.RELEASE_VERSION }} deepl-aarch64-apple-darwin.tar.gz
+        run: gh release upload v${{ env.RELEASE_VERSION }} deepl-${{ matrix.arch }}.tar.gz
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
